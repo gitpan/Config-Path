@@ -1,7 +1,7 @@
 package Config::Path;
 use Moose;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use Config::Any;
 use Hash::Merge;
@@ -81,6 +81,13 @@ has 'files' => (
     }
 );
 
+has '_mask' => (
+    is => 'rw',
+    isa => 'HashRef',
+    predicate => 'has_mask',
+    clearer => 'clear_mask'
+);
+
 sub _build__config {
     my ($self) = @_;
 
@@ -107,6 +114,10 @@ that adding a file after you've already loaded a config will not change
 anything.  You'll need to call C<reload> if you want to reread the
 configuration and include the new file.
 
+=head2 clear_mask
+
+Clear all values covered by C<mask>.
+
 =head2 fetch ($path)
 
 Get a value from the config file.  As per the name of this module, fetch takes
@@ -122,6 +133,13 @@ scalar, arrayref, hashref or whatever you've stored in the config file.
 sub fetch {
     my ($self, $path) = @_;
 
+    # Check the mask first to see if the path we've been given has been
+    # overriden.
+    if($self->has_mask) {
+        # Use exists just in case they set the value to undef.
+        return $self->_mask->{$path} if exists($self->_mask->{$path});
+    }
+
     my $conf = $self->_config;
     foreach my $piece (split(/\//, $path)) {
         $conf = $conf->{$piece};
@@ -131,11 +149,38 @@ sub fetch {
     return $conf;
 }
 
+=head2 mask ('path/to/value', 'newvalue')
+
+Override the specified key to the specified value. Note that this only changes
+the path's value in this instance. It does not change the config file. This is
+useful for tests.  Note that C<exists> is used so setting a path to undef
+will not clear the mask.  If you want to clear masks use C<clear_mask>.
+
+=cut
+
+sub mask {
+    my ($self, $path, $value) = @_;
+
+    # Set the mask if there isn't one.
+    $self->_mask({}) unless $self->has_mask;
+
+    # No reason to create a hierarchical setup here, just use the path as
+    # the key.
+    $self->_mask->{$path} = $value;
+}
+
 =head2 reload
 
 Rereads the config files specified in C<files>.  Well, actually it just blows
 away the internal state of the config so that the next call will reload the
-configuration.
+configuration. Note that this also clears any C<mask>ing you've done.
+
+=cut
+
+after 'reload' => sub {
+    my $self = shift;
+    $self->clear_mask;
+};
 
 =head1 AUTHOR
 
