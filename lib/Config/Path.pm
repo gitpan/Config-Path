@@ -1,7 +1,7 @@
 package Config::Path;
 use Moose;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 use Config::Any;
 use Hash::Merge;
@@ -194,12 +194,12 @@ Clear all values covered by C<mask>.
 =head2 fetch ($path)
 
 Get a value from the config file.  As per the name of this module, fetch takes
-a path argument in the form of C</foo/bar/baz>.  This is effectively a
+a path argument in the form of C<foo/bar/baz>.  This is effectively a
 shorthand way of expressing a series of hash keys.  Whatever value is on
 the end of the keys will be returned.  As such, fetch might return undef,
 scalar, arrayref, hashref or whatever you've stored in the config file.
 
-  my $foo = $config->fetch('/baz/bar/foo');
+  my $foo = $config->fetch('baz/bar/foo');
 
 =cut
 
