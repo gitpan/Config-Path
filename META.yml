@@ -1,31 +1,30 @@
 ---
-abstract: 'Path-like config API with multiple file support, directory'
+abstract: "Path-like config API with multiple file support, directory\nloading and arbitrary backends from Config::Any."
 author:
-  - 'Cory G Watson, C<< <gphat at cpan.org> >>'
   - 'Cory G Watson <gphat@cpan.org>'
 build_requires:
-  ExtUtils::MakeMaker: 6.36
+  Data::Dumper: 0
   Test::Exception: 0
   Test::More: 0
-  YAML::XS: 0
+  XML::Simple: 0
+  strict: 0
 configure_requires:
-  ExtUtils::MakeMaker: 6.36
-distribution_type: module
-dynamic_config: 1
-generated_by: 'Module::Install version 1.04'
+  ExtUtils::MakeMaker: 6.30
+dynamic_config: 0
+generated_by: 'Dist::Zilla version 4.300010, CPAN::Meta::Converter version 2.120630'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
 name: Config-Path
-no_index:
-  directory:
-    - inc
-    - t
 requires:
   Config::Any: 0
-  Hash::Merge: 0.12
+  Hash::Merge: 0
+  JSON::Any: 0
+  JSON::XS: 0
   Moose: 0
 resources:
-  license: http://dev.perl.org/licenses/
-version: 0.12
+  bugtracker: https://github.com/magazinesdotcom/config-path/issues
+  homepage: https://github.com/magazinesdotcom/config-path
+  repository: https://github.com/magazinesdotcom/config-path.git
+version: 0.13
